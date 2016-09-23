@@ -1,0 +1,7 @@
+{
+  "tags": {
+    "Purpose": "lambda-testing",
+    "Testing": "true"
+  },
+  "state": "stop"
+}
