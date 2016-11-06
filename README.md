@@ -72,4 +72,14 @@ Policy Document
 
 To deploy instance_manager to AWS, just type `lambda deploy`. (make sure you're deploying to the correct account)
 
-Once the deployment is complete verify that instance-manager is visible on the AWS Lambda Functions page.
+Once the deployment is complete verify that instance-manager (defined in config.yaml) is visible on the AWS Lambda Functions page.
+
+### Create CloudWatch schedule
+
+The final step is to create the CloudWatch schedule to run the lambda.
+
+1. CloudWatch - Rules - Create Rule
+2. Event Source - Schedule - Cron Expression - Put your schedule here e.g. `30 15 ? * * *` runs every day at 15:30 UTC
+3. Add Target - Lambda Function - Function = instance-manager
+4. Configure Input - Constant (JSON Text) - Paste your event.json here e.g. `{   "tags": {     "Purpose": "lambda-testing",     "Testing": "true"   },   "state": "stop" }`
+5. Configure Details - Give name and description and click Create Rule
