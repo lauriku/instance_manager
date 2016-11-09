@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import boto3
 import sys
+import calendar
+import datetime
 
 from botocore.exceptions import ClientError
 
@@ -13,6 +15,7 @@ def start_instances(instance_ids):
     print("Started instances: %s" % ", ".join(instance_ids))
   except ClientError as e:
     print("Error while starting instances: %s" % e)
+    raise
   except:
     print("Unknown error occured while starting instances: %s " % sys.exc_info()[0])
     raise
@@ -26,6 +29,7 @@ def stop_instances(instance_ids):
     print("Stopped instances: %s" % ", ".join(instance_ids))
   except ClientError as e:
     print("Error while stopping instances: %s" % e)
+    raise
   except:
     print("Unknown error occured while stopping instances: %s " % sys.exc_info()[0])
     raise
@@ -66,11 +70,28 @@ def get_instance_ids(instances):
       instanceids_list.append(inst['InstanceId'])
   return instanceids_list
 
+def is_first_monday_of_month():
+  # check whether today is the first monday of the running month
+  today = datetime.date.today()
+  current_month_days = calendar.monthrange(today.year, today.month)
+  delta = (calendar.MONDAY - current_month_days[0]) % 7
+  if today.weekday() == delta:
+    return True
+  else:
+    return False
+
 def handler(event, context):
   instances = get_instances(event)
   instanceids = []
   if len(instances) > 0:
     instanceids = get_instance_ids(instances)
+
+  if event.get('custom_schedule') == 'first-monday-of-month':
+    if is_first_monday_of_month():
+      print("First monday of month, continuing run.")
+    else:
+      print("Custom schedule not matched, exiting.")
+      sys.exit(0)
 
   if event.get('state') == 'start' and len(instanceids) > 0:
     print("Starting instances: %s" % ", ".join(instanceids))
