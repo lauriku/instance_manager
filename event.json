@@ -1,7 +1,7 @@
 {
   "tags": {
-    "Purpose": "lambda-testing",
-    "Testing": "true"
+    "Autostart": "true"
   },
-  "state": "stop"
+  "state": "start",
+  "custom_schedule": "first-monday-of-month"
 }
