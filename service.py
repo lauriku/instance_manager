@@ -72,7 +72,7 @@ def get_instance_ids(instances):
 
 def is_first_monday_of_month():
   # check whether today is the first monday of the running month
-  return datetime.date.today().weekday() == calendar.MONDAY and datetime.today().day < 8
+  return datetime.date.today().weekday() == calendar.MONDAY and datetime.date.today().day < 8
 
 def handler(event, context):
   instances = get_instances(event)
